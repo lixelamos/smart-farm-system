@@ -1,0 +1,9 @@
+# Query: factory
+# ContextLines: 1
+
+1 result - 1 file
+
+manager\pdf\files\printout.php:
+  26  		<p style='text-align:center'><img src='../../../images/logo.png' height='70'></p>
+  27: 		<h1 style=\"font-family:rockwell;color:#2E8B57;text-align:center\"> Smart Farm Processing System</h1>
+  28  		<h2 style='text-align:center;color:blue'>".ucwords($title)."</h2>
