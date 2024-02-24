@@ -193,7 +193,7 @@ if (isset($_POST['argn'])) {
 	$sid = trim($_POST['aid']);
 
 	if (mysqli_query($con, "UPDATE `agronomists` SET `name`='$user',`password`='$pass',`phone`='$fon',`location`='$loc' WHERE `id`='$sid'")) {
-		echo 'Details updated successful';
+		echo 'Details updated successfull';
 	} else {
 		echo 'Failed to update account';
 	}

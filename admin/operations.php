@@ -138,44 +138,46 @@ if (isset($_GET['produce'])) {
 	$data = "";
 	$sq = mysqli_query($con, "SELECT `station` FROM `supplies` WHERE `status`='0' ORDER BY `id` DESC");
 	while ($ro = mysqli_fetch_assoc($sq)) {
-		$stn = $ro['station'];
-		$dat = "";
-		$sql = mysqli_query($con, "SELECT DISTINCT `farmer` FROM `supplies` WHERE `station`='$stn' AND `status`='0'");
-		while ($rw = mysqli_fetch_assoc($sql)) {
-			$fid = $rw['farmer'];
-			$tr = "";
-			$no = 2;
-			$totd = 0;
-			$totp = 0;
-			$sq = mysqli_query($con, "SELECT *FROM `farmers` WHERE `id`='$fid'");
-			$name = prepare(ucwords(mysqli_fetch_assoc($sq)['name']));
-			$qry = mysqli_query($con, "SELECT *FROM `supplies` WHERE `farmer`='$fid' AND `status`='0'");
-			while ($row = mysqli_fetch_assoc($qry)) {
-				$prod = prepare(ucwords($row['produce']));
-				$qnty = $row['quantity'];
-				$rate = $row['rate'];
-				$tot = $row['total'];
-				$st = $row['status'];
-				$id = $row['id'];
-				$cond = ($st == 0) ? "Supply unverified<br><span class='lnk'onclick=\"verifysup('$id')\">Verify</span>" : "Verified";
-				$tm = $row['time'];
-				$day = date("d-m-Y, h:i a", $tm);
-				$no += 1;
-				$totp += $tot;
-				$tr .= "<tr><td>$day</td><td>$prod</td><td>$qnty x " . fnum($rate) . "</td><td>$cond</td><td>" . fnum($tot) . "</td></tr>";
-			}
+		if (isset($ro['station'])) {
+			$stn = $ro['station'];
+			$dat = "";
+			$sql = mysqli_query($con, "SELECT DISTINCT `farmer` FROM `supplies` WHERE `station`='$stn' AND `status`='0'");
+			while ($rw = mysqli_fetch_assoc($sql)) {
+				$fid = $rw['farmer'];
+				$tr = "";
+				$no = 2;
+				$totd = 0;
+				$totp = 0;
+				$sq = mysqli_query($con, "SELECT *FROM `farmers` WHERE `id`='$fid'");
+				$name = prepare(ucwords(mysqli_fetch_assoc($sq)['name']));
+				$qry = mysqli_query($con, "SELECT *FROM `supplies` WHERE `farmer`='$fid' AND `status`='0'");
+				while ($row = mysqli_fetch_assoc($qry)) {
+					$prod = prepare(ucwords($row['produce']));
+					$qnty = $row['quantity'];
+					$rate = $row['rate'];
+					$tot = $row['total'];
+					$st = $row['status'];
+					$id = $row['id'];
+					$cond = ($st == 0) ? "Supply unverified<br><span class='lnk'onclick=\"verifysup('$id')\">Verify</span>" : "Verified";
+					$tm = $row['time'];
+					$day = date("d-m-Y, h:i a", $tm);
+					$no += 1;
+					$totp += $tot;
+					$tr .= "<tr><td>$day</td><td>$prod</td><td>$qnty x " . fnum($rate) . "</td><td>$cond</td><td>" . fnum($tot) . "</td></tr>";
+				}
 
-			$tr .= "<tr valign='top' style='font-weight:bold;text-align:right'><td colspan='4'>Totals</td><td>" . fnum($totp) . "</td></tr>";
-			$dat .= "<tr valign='top'><td rowspan='$no'>$name</td>$tr</tr>";
-		}
-		$data .= "<table cellpadding='10'style='border:1px solid #ccc;width:100%;border-collapse:collapse' border='1'>
+				$tr .= "<tr valign='top' style='font-weight:bold;text-align:right'><td colspan='4'>Totals</td><td>" . fnum($totp) . "</td></tr>";
+				$dat .= "<tr valign='top'><td rowspan='$no'>$name</td>$tr</tr>";
+			}
+			$data .= "<table cellpadding='10'style='border:1px solid #ccc;width:100%;border-collapse:collapse' border='1'>
 			<caption style='text-align:left;padding:10px 0px'><h3>" . prepare(ucwords($stn)) . " pickup station</h3></caption>
 			<tr style='font-weight:bold'><td>Farmer</td><td>Date</td><td>Supply</td><td>Quantity</td><td>Status</td>
 			<td>Total</td></tr>$dat</table><br>";
-	}
+		}
 
-	echo "<h3 style='color:blue'>Collect Farm products</h3><br>";
-	echo ($data == "") ? "<p style='color:grey;line-height:70px;'>No supplies made</p>" : $data;
+		echo "<h3 style='color:blue'>Collect Farm products</h3><br>";
+		echo ($data == "") ? "<p style='color:grey;line-height:70px;'>No supplies made</p>" : $data;
+	}
 }
 
 //add product demand

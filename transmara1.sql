@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `demand` (
 --
 
 INSERT INTO `demand` (`id`, `product`, `measure`, `rate`, `maxsupply`, `status`) VALUES
-(1, 'black sugarcane', '1 tracktor', 15000, 50, 0);
+(1, 'black sugarcane', '1 tractor', 15000, 50, 0);
 
 -- --------------------------------------------------------
 
@@ -216,7 +216,7 @@ CREATE TABLE IF NOT EXISTS `products` (
 --
 
 INSERT INTO `products` (`id`, `product`, `photo`, `details`, `cost`, `time`) VALUES
-(1, 'sugar', 'Prod-22012020-033555.jpg', '50kg white sugra', 2500, 1579696555);
+(1, 'sugar', 'sugar.jpg', '50kg white sugar', 2500, 1579696555);
 
 -- --------------------------------------------------------
 
