@@ -225,7 +225,7 @@ if (isset($_GET['inputs'])) {
 		$cost = fnum($row['cost']);
 		$loc = prepare($row['county']);
 		$post = date("M d, h:i a", $row['time']);
-		$data .= "<tr valign='top'><td><img src='../photos/$pic' style='max-width:100%;max-height:120px'></td><td><h4 style='color:#008080'>$name @Ksh $cost</h4>
+		$data .= "<tr valign='top'><td><img src='./photos/$pic' style='max-width:100%;max-height:120px'></td><td><h4 style='color:#008080'>$name @Ksh $cost</h4>
 			<p style='padding:6px 0px'>$det</p><p style='color:#008fff;font-size:14px'>For $loc county</p>
 			<p style='padding:10px 0px;text-align:right;color:grey;'><i>$post</i></p></td></tr>";
 	}
@@ -250,7 +250,7 @@ if (isset($_GET['inputs'])) {
 			}
 			$pd = ($paid == 0) ? "Unpaid" : "Paid on " . date("d-m-Y, h:i a", $paid);
 		}
-		$tr .= "<tr valign='top'><td><img src='../photos/$pic'height='100px'></td><td><h4>$fname</h4><p>$name</p><p style='padding:6px 0px'>($no) Ksh $cost</p>
+		$tr .= "<tr valign='top'><td><img src='./photos/$pic'height='100px'></td><td><h4>$fname</h4><p>$name</p><p style='padding:6px 0px'>($no) Ksh $cost</p>
 			<p style='font-size:14px;color:#2f4f4f'>$pd</p><p style='color:blue;text-align:right'><i>$dy</i></p></td></tr>";
 	}
 

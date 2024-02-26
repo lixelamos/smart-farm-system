@@ -78,7 +78,7 @@ if (isset($_POST['prd'])) {
 			if (in_array($ext, $allowed)) {
 				$newname = "Prod-" . date("dmY-his") . ".$ext";
 				$saven = $newname;
-				$save = "./photo/" . $newname;
+				$save = "../photos/" . $newname;
 				list($width, $height) = getimagesize($tmp);
 				if ($ext == "png" || $ext == "PNG") {
 					$newname = imagecreatefrompng($tmp);
@@ -120,14 +120,6 @@ if (isset($_POST['prd'])) {
 			echo "Choose a valid Image file only";
 		}
 	}
-	if (imagejpeg($tmp_image, $save, 100)) {
-		// Your existing code ...
-
-		// Echo the URL of the uploaded image
-		$imageURL = 'http://' . $_SERVER['HTTP_HOST'] . '/photo/' . $saven;
-		echo '<img src="' . $imageURL . '" alt="Uploaded Product Image">';
-		echo 'success';
-	}
 }
 
 //save farm inputs
@@ -149,7 +141,7 @@ if (isset($_POST['pname'])) {
 			if (in_array($ext, $allowed)) {
 				$newname = "Input-" . date("dmY-his") . ".$ext";
 				$saven = $newname;
-				$save = "../photo" . $newname;
+				$save = "../photos/" . $newname;
 				list($width, $height) = getimagesize($tmp);
 				if ($ext == "png" || $ext == "PNG") {
 					$newname = imagecreatefrompng($tmp);
@@ -171,8 +163,8 @@ if (isset($_POST['pname'])) {
 					$new_height = $height;
 				}
 
-				$tmp_image = imagecreatetruecolor($new_width, $new_height);
-				imagecopyresampled($tmp_image, $newname, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+				$tmp_image = imagecreatetruecolor(intval($new_width), intval($new_height));
+				imagecopyresampled($tmp_image, $newname, 0, 0, 0, 0, intval($new_width), intval($new_height), $width, $height);
 				if (imagejpeg($tmp_image, $save, 100)) {
 					$sql = mysqli_query($con, "INSERT INTO `inputs` VALUES(id=(id+1),'$prod','$saven','$det','$cost','$loc','$tm')");
 					if ($sql) {
