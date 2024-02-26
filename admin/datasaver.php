@@ -60,7 +60,6 @@ if (isset($_POST['stn'])) {
 }
 
 
-
 //save product
 if (isset($_POST['prd'])) {
 	$prod = clean(strtolower($_POST['prd']));
@@ -79,7 +78,7 @@ if (isset($_POST['prd'])) {
 			if (in_array($ext, $allowed)) {
 				$newname = "Prod-" . date("dmY-his") . ".$ext";
 				$saven = $newname;
-				$save = "./photos/" . $newname;
+				$save = "./photo/" . $newname;
 				list($width, $height) = getimagesize($tmp);
 				if ($ext == "png" || $ext == "PNG") {
 					$newname = imagecreatefrompng($tmp);
@@ -121,6 +120,14 @@ if (isset($_POST['prd'])) {
 			echo "Choose a valid Image file only";
 		}
 	}
+	if (imagejpeg($tmp_image, $save, 100)) {
+		// Your existing code ...
+
+		// Echo the URL of the uploaded image
+		$imageURL = 'http://' . $_SERVER['HTTP_HOST'] . '/photo/' . $saven;
+		echo '<img src="' . $imageURL . '" alt="Uploaded Product Image">';
+		echo 'success';
+	}
 }
 
 //save farm inputs
@@ -142,7 +149,7 @@ if (isset($_POST['pname'])) {
 			if (in_array($ext, $allowed)) {
 				$newname = "Input-" . date("dmY-his") . ".$ext";
 				$saven = $newname;
-				$save = "./photos" . $newname;
+				$save = "../photo" . $newname;
 				list($width, $height) = getimagesize($tmp);
 				if ($ext == "png" || $ext == "PNG") {
 					$newname = imagecreatefrompng($tmp);
@@ -321,19 +328,22 @@ if (isset($_POST['ptp'])) {
 	}
 }
 
-//save demand
 if (isset($_POST['prodn'])) {
-	$name = clean(strtolower($_POST['prodn']));
-	$ms = clean(strtolower($_POST['ms']));
-	$prc = clean($_POST['price']);
-	$qnty = clean($_POST['qnty']);
+	$product = clean(strtolower($_POST['prodn']));  // Adjust variable name to reflect the actual column name
+	$measure = clean(strtolower($_POST['ms']));
+	$rate = clean($_POST['price']);  // Assuming this corresponds to the rate column
+	$maxsupply = clean($_POST['qnty']);  // Assuming this corresponds to the maxsupply column
 
-	if (mysqli_query($con, "INSERT INTO `demand` VALUES(id=(id+1),'$name','$ms','$prc','$qnty','0')")) {
+	// Use correct column names in the INSERT statement
+	$query = "INSERT INTO `demand` (`product`, `measure`, `rate`, `maxsupply`, `status`) VALUES ('$product', '$measure', '$rate', '$maxsupply', '0')";
+
+	if (mysqli_query($con, $query)) {
 		echo "success";
 	} else {
-		echo "Failed to add demand";
+		echo "Failed to add demand: " . mysqli_error($con);
 	}
 }
+
 
 //save news
 if (isset($_POST['src'])) {

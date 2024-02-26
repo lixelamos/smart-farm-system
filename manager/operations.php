@@ -139,7 +139,7 @@ if (isset($_POST['manager'])) {
 	$sid = trim($_POST['sid']);
 
 	if (mysqli_query($con, "UPDATE `manager` SET `username`='$user',`password`='$pass' WHERE `id`='$sid'")) {
-		echo 'Details updated successfull';
+		echo 'Details updated successful';
 	} else {
 		echo 'Failed to update account';
 	}

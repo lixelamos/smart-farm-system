@@ -91,7 +91,7 @@ if (isset($_GET['agronchats'])) {
 	$sid = trim($_GET['sid']);
 	$data = "";
 	$flow = "a-$sid";
-	$sql = mysqli_query($con, "SELECT DISTINCT `sender` FROM `chats` WHERE NOT `sender`='$flow' AND `receiver`='$flow' ORDER BY `time` DESC");
+	$sql = mysqli_query($con, "SELECT  `sender` FROM `chats` WHERE NOT `sender`='$flow' AND `receiver`='$flow' ORDER BY `time` DESC");
 	while ($row = mysqli_fetch_assoc($sql)) {
 		$sen = trim($row['sender']);
 		$senda = explode("-", $sen)[1];
