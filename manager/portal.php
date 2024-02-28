@@ -397,6 +397,7 @@ ob_end_flush();
 		});
 	}
 
+	
 	function genpdf(rec) {
 		window.open("pdf/files/printout.php?tp=" + rec);
 	}

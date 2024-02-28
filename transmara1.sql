@@ -107,15 +107,17 @@ INSERT INTO `demand` (`id`, `product`, `measure`, `rate`, `maxsupply`, `status`)
 --
 
 CREATE TABLE IF NOT EXISTS `farmers` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `phone` int(11) NOT NULL,
   `idno` int(11) NOT NULL,
   `password` varchar(50) NOT NULL,
   `location` varchar(255) NOT NULL,
   `status` int(11) NOT NULL,
-  `time` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+  `time` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 
 --
 -- Dumping data for table `farmers`
@@ -203,13 +205,15 @@ CREATE TABLE IF NOT EXISTS `payments` (
 --
 
 CREATE TABLE IF NOT EXISTS `products` (
-`id` int(11) NOT NULL,
-  `product` varchar(255) NOT NULL,
-  `photo` varchar(255) NOT NULL,
-  `details` text NOT NULL,
-  `cost` int(11) NOT NULL,
-  `time` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `product` varchar(255) NOT NULL,
+    `photo` varchar(255) NOT NULL,
+    `details` text NOT NULL,
+    `cost` int(11) NOT NULL,
+    `time` int(11) NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 
 --
 -- Dumping data for table `products`

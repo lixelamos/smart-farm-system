@@ -40,10 +40,12 @@ if (isset($_GET['sales'])) {
 			$name = prepare(ucwords(mysqli_fetch_assoc($sq)['name']));
 			$dat .= "<tr valign='top'><td><img src='../photos/$pic' height='100'></td><td><h4>$item</h4><p>$desc<p><br><p><i>Ksh $cost</i></p></td>
 				<td><h4>$name</h4><p style='color:grey;padding-top:10px'>$day<br><i>$paid</i></p></</td></tr>";
+				
 		}
 
 		$data .= "<fieldset style='border:1px solid #dcdcdc'><legend><h3 style='color:blue'>$dy</h3></legend><br>
 			<table cellpadding='10'>$dat</table></fieldset><br>";
+			
 	}
 
 	echo "<div style='max-width:800px;margin:0 auto'>
@@ -178,6 +180,7 @@ if (isset($_GET['produce'])) {
 	}
 	echo "<h3 style='color:blue'>Produce collection report <button class='btn'style='float:right;background:#F08080;padding:5px'onclick=\"genpdf('produce')\">
 		<i class='fa fa-file-pdf-o'></i> PDF</button></h3><br>";
+		
 	echo ($data == "") ? "<p style='color:grey;line-height:70px;'>No supplies made</p>" : "<table cellpadding='10'style='border:1px solid #ccc;width:100%;
 		border-collapse:collapse' border='1'><tr style='font-weight:bold'><td>Farmer</td><td>Date</td><td>Supply</td><td>Quantity</td><td>Status</td>
 		<td>Total</td></tr>$data</table>";
@@ -225,7 +228,7 @@ if (isset($_GET['inputs'])) {
 		$cost = fnum($row['cost']);
 		$loc = prepare($row['county']);
 		$post = date("M d, h:i a", $row['time']);
-		$data .= "<tr valign='top'><td><img src='./photos/$pic' style='max-width:100%;max-height:120px'></td><td><h4 style='color:#008080'>$name @Ksh $cost</h4>
+		$data .= "<tr valign='top'><td><img src='../photos/$pic' style='max-width:100%;max-height:120px'></td><td><h4 style='color:#008080'>$name @Ksh $cost</h4>
 			<p style='padding:6px 0px'>$det</p><p style='color:#008fff;font-size:14px'>For $loc county</p>
 			<p style='padding:10px 0px;text-align:right;color:grey;'><i>$post</i></p></td></tr>";
 	}
@@ -250,7 +253,7 @@ if (isset($_GET['inputs'])) {
 			}
 			$pd = ($paid == 0) ? "Unpaid" : "Paid on " . date("d-m-Y, h:i a", $paid);
 		}
-		$tr .= "<tr valign='top'><td><img src='./photos/$pic'height='100px'></td><td><h4>$fname</h4><p>$name</p><p style='padding:6px 0px'>($no) Ksh $cost</p>
+		$tr .= "<tr valign='top'><td><img src='../photos/$pic'height='100px'></td><td><h4>$fname</h4><p>$name</p><p style='padding:6px 0px'>($no) Ksh $cost</p>
 			<p style='font-size:14px;color:#2f4f4f'>$pd</p><p style='color:blue;text-align:right'><i>$dy</i></p></td></tr>";
 	}
 

@@ -2,7 +2,7 @@
 	include "dbcon.php";
 
 // Or using ini_set()
-ini_set('include_path', '/C:\xampp\htdocs\Factory system\chatsaver.php');
+ini_set('include_path', '/Users/amoskipkorir/Downloads/chemelil sugarcane/chatsaver.php');
 
 	//delete chat
 	if(isset($_POST['dmssg'])){
@@ -126,9 +126,24 @@ ini_set('include_path', '/C:\xampp\htdocs\Factory system\chatsaver.php');
 			}
 		}
 		
-		$sql=mysqli_query($con,"SELECT *FROM `chats` ORDER BY `time` DESC LIMIT 1");
-		$maxtm=mysqli_fetch_array($sql)['time']; echo "<input type='hidden' id='maxtm' value='$maxtm'>";
-		echo '<div style="height:40px;float:right;width:100%"></div></div>';
+		$sql = mysqli_query($con, "SELECT * FROM `chats` ORDER BY `time` DESC LIMIT 1");
+
+if ($sql) {
+    // Check if the query returned any results
+    if (mysqli_num_rows($sql) > 0) {
+        // Fetch the data
+        $maxtm = mysqli_fetch_array($sql)['time'];
+        // Output the input element
+        echo "<input type='hidden' id='maxtm' value='$maxtm'>";
+    } else {
+        // Handle case where no data was found
+        echo "No data found.";
+    }
+} else {
+    // Handle case where the query failed
+    echo "Error executing query: " . mysqli_error($con);
+}
+
 	}
 	
 	//save chat
