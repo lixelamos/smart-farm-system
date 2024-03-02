@@ -69,14 +69,16 @@ INSERT INTO `agronomists` (`id`, `name`, `phone`, `password`, `photo`, `location
 --
 
 CREATE TABLE IF NOT EXISTS `chats` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `sender` varchar(50) NOT NULL,
   `receiver` varchar(50) NOT NULL,
   `message` text NOT NULL,
   `type` varchar(50) NOT NULL,
   `status` int(11) NOT NULL,
-  `time` int(11) NOT NULL
+  `time` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 
 -- --------------------------------------------------------
 
