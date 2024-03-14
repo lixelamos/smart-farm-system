@@ -421,55 +421,63 @@ if (isset($_GET["myacc"])) {
 
 //change profile
 if (isset($_FILES['logo'])) {
-	$name = strtolower($_FILES['logo']['name']);
-	$tmp = $_FILES['logo']['tmp_name'];
-	$ext = end(explode(".", $name));
-	$allowed = array("jpg", "jpeg", "png", "gif");
-	$bid = trim($_POST['bid']);
+    $name = strtolower($_FILES['logo']['name']);
+    $tmp = $_FILES['logo']['tmp_name'];
+    $parts = explode(".", $name);
+    $ext = end($parts);
+    $allowed = array("jpg", "jpeg", "png", "gif");
+    $bid = isset($_POST['bid']) ? trim($_POST['bid']) : '';
 
-	if (getimagesize($tmp)) {
-		if (in_array($ext, $allowed)) {
-			$newname = 'prof-' . date("His") . '.' . $ext;
-			$save = "../photos/" . $newname;
-			$saven = $newname;
+    if(getimagesize($tmp)){
+        if(in_array($ext, $allowed)){
+            $newname = 'prof-' . date("His") . '.' . $ext;
+            $save = "/Users/amoskipkorir/Downloads/chemelil sugarcane/photos/" . $newname;
+            $saven = $newname;
 
-			list($width, $height) = getimagesize($tmp);
-			if ($ext == "png") {
-				$newname = imagecreatefrompng($tmp);
-			}
-			if ($ext == 'jpg' || $ext == 'jpeg') {
-				$newname = imagecreatefromjpeg($tmp);
-			}
-			if ($ext == "gif") {
-				$newname = imagecreatefromgif($tmp);
-			}
-			$new_height = 150;
-			$new_width = ($width / $height) * 150;
+            list($width, $height) = getimagesize($tmp);
+if($ext == "png"){
+                $newname = imagecreatefrompng($tmp);
+            }
+            if($ext == 'jpg' || $ext == 'jpeg'){
+                $newname = imagecreatefromjpeg($tmp);
+            }
+            if($ext == "gif"){
+                $newname = imagecreatefromgif($tmp);
+            }
+                        $new_height = 150;
+            $new_width = ($width / $height) * 150;
 
-			$sql = mysqli_query($con, "SELECT *FROM `agronomists` WHERE `id`='$bid'");
-			$prof = mysqli_fetch_array($sql)['photo'];
+            $sql = mysqli_query($con, "SELECT * FROM `agronomists` WHERE `id`='$bid'");
+            if ($sql && mysqli_num_rows($sql) > 0) {
+                $prof = mysqli_fetch_array($sql)['photo'];
+            } else {
+                $prof = null;
+            }
 
-			$tmp_image = imagecreatetruecolor($new_width, $new_height);
-			imagecopyresampled($tmp_image, $newname, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
-			if (imagejpeg($tmp_image, $filename = "prof-", 100)) {
-				if (mysqli_query($con, "UPDATE `agronomists` SET `photo`='$save' WHERE `id`='$bid'")) {
-					echo "success";
-					if ($prof != "none") {
-						unlink("photos/$prof");
-					}
-				} else {
-					echo "Failed to update profile";
-					unlink($save);
-				}
-			}
-			imagedestroy($tmp_image);
-			imagedestroy($newname);
-		} else {
-			echo "Choose a valid Profile Image";
-		}
-	} else {
-		echo "File selected is not an image";
-	}
+            $tmp_image = imagecreatetruecolor($new_width, $new_height);
+            imagecopyresampled($tmp_image, $newname, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+            if(imagejpeg($tmp_image, $save, 100)){
+                if(mysqli_query($con, "UPDATE `agronomists` SET `photo`='$saven' WHERE `id`='$bid'")){
+                    echo "success";
+if($prof != "none" && $prof != ""){ 
+                        unlink("/Users/amoskipkorir/Downloads/chemelil sugarcane/photos/$prof"); 
+                    }
+                }
+                else{
+                    echo "Failed to update profile";
+                    unlink($save);
+            }
+            }
+            imagedestroy($tmp_image);
+            imagedestroy($newname);
+        }
+        else{
+            echo "Choose a valid Profile Image";
+        }
+    }
+    else{
+        echo "File selected is not an image";
+    }
 }
 
 ?>
