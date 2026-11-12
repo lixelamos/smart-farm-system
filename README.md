@@ -1,7 +1,7 @@
 # Smart Farm · Narok County
 
 A Next.js application for Narok’s farmers, agronomists, managers, and administrators.
-The app uses an external MySQL-compatible database and is designed to run on Vercel.
+The frontend runs on Vercel and connects through a private server-side proxy to a separately hosted PHP/MySQL backend.
 
 ## Workflows
 
@@ -17,29 +17,26 @@ self-hosted Newsreader and Source Sans 3 fonts.
 
 ## Run locally
 
-Use Node.js 22+ and a MySQL 8-compatible database.
+Use Node.js 22+ for the frontend and PHP 8.3/MySQL for the backend. See [PHP-HOSTING.md](PHP-HOSTING.md).
 
 ```sh
 npm ci
 cp .env.example .env.local
 ```
 
-Set the database connection and `APP_URL` in `.env.local`, then:
+Set `APP_URL`, `PHP_API_URL`, and `PHP_API_KEY` in `.env.local`, then:
 
 ```sh
-npm run db:migrate
-npm run db:import -- /path/to/your/smart-farm-data.sql
 npm run dev
 ```
 
-Open `http://localhost:3000`. The importer refuses to replace a nonempty database.
-For a genuinely fresh installation, see the administrator bootstrap instructions
-in [VERCEL.md](VERCEL.md). No default production password is created.
+Open `http://localhost:3000`. Configure and migrate the PHP backend separately as
+described in [PHP-HOSTING.md](PHP-HOSTING.md). The frontend holds no DB credentials.
 
 ## Deploy and move existing records
 
-Read **[VERCEL.md](VERCEL.md)** for exporting your local Docker database, importing
-records, moving photos into a private Vercel Blob store, environment settings, and
+Read **[PHP-HOSTING.md](PHP-HOSTING.md)** for exporting your local Docker database, importing
+records, moving photos into private persistent PHP storage, environment settings, and
 deploying on Vercel. Database credentials and `.env.local` must not be committed.
 
 Vercel still needs a reachable external database. Online payment verification needs

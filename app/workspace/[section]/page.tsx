@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { sessionUser } from "@/lib/auth";
+import { backendUser as sessionUser } from "@/lib/php-backend";
 import { mayAccess } from "@/lib/domain";
 import { WorkspaceScreen } from "@/components/workspace-screen";
 export default async function Section({

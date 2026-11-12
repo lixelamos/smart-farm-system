@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { sessionUser } from "@/lib/auth";
+import { backendUser as sessionUser } from "@/lib/php-backend";
 import { WorkspaceShell } from "@/components/workspace-shell";
 export const dynamic = "force-dynamic";
 export default async function Layout({
