@@ -1,46 +1,12 @@
-<?php 
-
-include("dbcon.php");?>	
-<html>
-	<title>My Account</title>
-	<meta charset="utf-8">
-	<meta name="viewport"content="width=device-width,initial-scale=1.0,user-scalable=no,user-scalable=0">
-
-	<head>
-		<link rel="shortcut icon"href="images/favi.ico">
-		<link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">
-		<script src="js/jquery.js"></script>
-		
-		<style>
-		*{margin:0px;}
-		a{text-decoration:none;}
-		.main{
-			margin:0 auto;max-width:500px;height:100%;background:rgba(0,0,0,0.3);font-family:cambria
-		}
-		body{background-image:url('images/back.jpg');background-size:cover;background-repeat:no-repeat}
-		td{background:rgba(0,250,154,0.6);color:#fff;width:50%;text-shadow:0px 1px 1px #000;font-size:17px;cursor:pointer;border-radius:5px;}
-		td:hover{background:rgba(32,178,170,0.7);transition:.5s;color:#fff;}
-		</style>
-	</head>
-	<body>
-		<div class="main">
-			<div style="padding:20px"><br>
-			<center>
-				<p><img src="images/logo.png" height="150"></p><br>
-				<h3 style="color:#fff;text-shadow:0px 1px 1px #000">Smart Farm Processing System</h3><br>
-				<table cellpadding="10" cellspacing="15px" style="width:100%;height:300px;text-align:center">
-				<tr><td onclick="navigate('manager/index.php')">Manager<br>Signin</td><td onclick="navigate('admin/index.php')">Admin<br>Signin</td></tr>
-				<tr><td onclick="navigate('login.php')">Agrnonomist<br>Signin</td><td onclick="navigate('login.php')">Farmer<br>Signin</td></tr>
-				</table><br>
-				<h4 style="color:#fff;text-shadow:0px 1px 1px #000">Copyright &copy; SFPS2022</h4>
-			</center>
-			</div>
-		</div>
-	</body>
-	</html>
-	
-	<script>
-		function navigate(to){
-			window.location.replace(to);
-		}
-	</script>
+<?php require_once __DIR__ . "/includes/ui.php"; ?>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><link rel="preload" href="fonts/SourceSans3.ttf" as="font" type="font/ttf" crossorigin><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Connect farmers, agronomists, and farm teams. Manage produce, farm inputs, payments, and county updates with Smart Farm."><meta name="theme-color" content="#993b2f"><title>Smart Farm · Narok County</title><link rel="icon" href="images/favi.png"><link rel="stylesheet" href="<?= sf_asset("css/design.css", "") ?>"><script src="<?= sf_asset("js/design.js", "") ?>" defer></script></head>
+<body class="home-page"><a class="skip-link" href="#main">Skip to content</a><header class="public-header container"><?php sf_brand(); ?><nav class="public-nav" aria-label="Main navigation"><a href="#how-it-works">How it works</a><a href="#workspaces">Your workspace</a></nav><a class="button button-small button-outline" href="login.php">Sign in <span aria-hidden="true"><svg class="arrow-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14" stroke="currentColor" stroke-width="1.5"/></svg></span></a></header>
+<main id="main"><section class="hero container"><div class="hero-copy"><p class="eyebrow"><span class="small-rule"></span> NAROK COUNTY · AGRICULTURE & COMMUNITY</p><h1>Farming in Narok.<br><em>Connected.</em></h1><p class="hero-description">A shared workspace for Narok’s farmers, agronomists, and farm teams. Find produce opportunities, access farm inputs, and keep your records in order.</p><div class="hero-actions"><a class="button button-primary" href="signup.php">Register as a farmer <span aria-hidden="true"><svg class="arrow-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14" stroke="currentColor" stroke-width="1.5"/></svg></span></a><a class="text-link" href="#how-it-works">Take a closer look <span aria-hidden="true">↓</span></a></div><div class="hero-footnote"><span class="seed-icon" aria-hidden="true">N.</span><p>Less time keeping track.<br><strong>More time growing what matters.</strong></p></div></div>
+<div class="hero-visual"><div class="map-topline"><span><span class="status-dot"></span> THE NAROK LANDSCAPE</span><span>FARMING COMMUNITY</span></div><img class="field-map" src="<?= sf_asset("images/field-map.svg", "") ?>" width="640" height="450" alt="An illustration of cultivated highland fields, hills, and farm roads inspired by Narok"><div class="map-caption"><span>From our highlands to your next harvest.</span><span aria-hidden="true"><svg class="arrow-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14" stroke="currentColor" stroke-width="1.5"/></svg></span></div><div class="field-note"><span class="note-icon" aria-hidden="true"><svg class="arrow-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14" stroke="currentColor" stroke-width="1.5"/></svg></span><div><span class="eyebrow">CULTIVATING LOCAL CONNECTIONS</span><strong>Local knowledge. Shared opportunity.</strong><span>Produce · Inputs · People · Payments</span></div></div></div></section>
+<section class="purpose-strip"><div class="container purpose-inner"><p>Farming services for <br><strong>Narok County.</strong></p><span><span aria-hidden="true">01</span> Farmers</span><span><span aria-hidden="true">02</span> Agronomists</span><span><span aria-hidden="true">03</span> Farm teams</span></div></section>
+<section class="workflow container" id="how-it-works"><div class="section-heading"><div><p class="eyebrow">YOUR FARM. YOUR RECORDS. YOUR COMMUNITY.</p><h2>Practical tools.<br>For the work on the ground.</h2></div><p>Keep the daily details in order, so you can focus on the work that makes a difference.</p></div><div class="workflow-grid"><article><span class="step-number">01 / CONNECT</span><div class="line-icon" aria-hidden="true">↔</div><h3>A direct line to your people.</h3><p>Reach an agronomist, share a question, and stay informed with news from your county.</p><a href="login.php">Find your community <span aria-hidden="true"><svg class="arrow-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14" stroke="currentColor" stroke-width="1.5"/></svg></span></a></article><article><span class="step-number">02 / MANAGE</span><div class="line-icon" aria-hidden="true">▤</div><h3>Make the most of your produce.</h3><p>See open demand, keep track of supplies, and explore the inputs and products you need.</p><a href="login.php">Explore your workspace <span aria-hidden="true"><svg class="arrow-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14" stroke="currentColor" stroke-width="1.5"/></svg></span></a></article><article><span class="step-number">03 / KEEP TRACK</span><div class="line-icon" aria-hidden="true">✓</div><h3>Know where things stand.</h3><p>Keep purchases, sales, and payment records together. Clear information for your next decision.</p><a href="login.php">Keep things in view <span aria-hidden="true"><svg class="arrow-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14" stroke="currentColor" stroke-width="1.5"/></svg></span></a></article></div></section>
+<section class="workspaces-section" id="workspaces"><div class="container workspace-section-inner"><div class="workspace-intro"><p class="eyebrow">YOUR PART IN THE NAROK LANDSCAPE</p><h2>Different roles.<br>Shared progress.</h2><p>A dedicated workspace for everyone who helps the farm thrive. Choose yours to get started.</p><div class="workspace-note"><span aria-hidden="true">N.</span><p>Already part of Smart Farm?<br>Sign in to pick up where you left off.</p></div></div><div class="role-list"><a href="login.php"><span class="role-index">01</span><div><h3>I'm a farmer</h3><p>Produce, inputs, payments, and expert advice.</p></div><span class="role-arrow" aria-hidden="true"><svg class="arrow-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14" stroke="currentColor" stroke-width="1.5"/></svg></span></a><a href="login.php"><span class="role-index">02</span><div><h3>I'm an agronomist</h3><p>Stay close to farmers and share local knowledge.</p></div><span class="role-arrow" aria-hidden="true"><svg class="arrow-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14" stroke="currentColor" stroke-width="1.5"/></svg></span></a><a href="manager/index.php"><span class="role-index">03</span><div><h3>I'm a manager</h3><p>Connect the people and operations behind the farm.</p></div><span class="role-arrow" aria-hidden="true"><svg class="arrow-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14" stroke="currentColor" stroke-width="1.5"/></svg></span></a><a href="admin/index.php"><span class="role-index">04</span><div><h3>I'm an administrator</h3><p>Manage accounts, produce demand, and collection points.</p></div><span class="role-arrow" aria-hidden="true"><svg class="arrow-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14" stroke="currentColor" stroke-width="1.5"/></svg></span></a></div></div></section>
+<section class="closing container"><span class="eyebrow">SERVING THE NAROK FARMING COMMUNITY</span><h2>Your farm. Your county. Your next step.</h2><a class="button button-primary" href="signup.php">Create your farmer account <span aria-hidden="true"><svg class="arrow-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14" stroke="currentColor" stroke-width="1.5"/></svg></span></a></section></main>
+<footer class="site-footer container"><div><?php sf_brand(); ?><p>Agriculture, rooted in Narok.</p></div><div class="footer-links"><a href="#how-it-works">How it works</a><a href="#workspaces">Workspaces</a><a href="login.php">Sign in</a></div><div class="footer-bottom"><span>© <?= date(
+    "Y",
+) ?> Smart Farm. All rights reserved.</span><span>Narok North · Narok East · Narok South · Narok West · Kilgoris · Emurua Dikirr</span></div></footer></body></html>

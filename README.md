@@ -1,108 +1,62 @@
-Smart Farm System
+# Smart Farm · Narok County
 
-A production-grade, full-stack farm automation platform developed using PHP and MySQL. This system empowers agricultural stakeholders—farmers, agronomists, managers, and administrators—to monitor sensors, manage crop cycles, communicate in real time, and execute core farm operations efficiently. Built as a capstone project, this application demonstrates a complete end-to-end workflow with extensibility in mind.
+A Next.js application for Narok’s farmers, agronomists, managers, and administrators.
+The app uses an external MySQL-compatible database and is designed to run on Vercel.
 
-Table of Contents
+## Workflows
 
-Features
+- Role-based sign-in, farmer registration/approval, account editing, and recovery.
+- Produce demand, pickup stations, supply submission, cancellation, and verification.
+- Farm input/product catalogues, orders, purchase history, and payment records.
+- County news and farmer–agronomist conversations, including private photo attachments.
+- Permission-scoped CSV and PDF exports.
+- Migration of the original PHP application's records and image references.
 
-Technology Stack
+The Narok visual identity uses warm paper, charcoal, ochre, and rust red, with
+self-hosted Newsreader and Source Sans 3 fonts.
 
-System-Architecture
+## Run locally
 
-Project-Structure
+Use Node.js 22+ and a MySQL 8-compatible database.
 
-Database-Schema-Overview
+```sh
+npm ci
+cp .env.example .env.local
+```
 
-Setup-and-Installation
+Set the database connection and `APP_URL` in `.env.local`, then:
 
-Environment-Configuration
+```sh
+npm run db:migrate
+npm run db:import -- /path/to/your/smart-farm-data.sql
+npm run dev
+```
 
-Usage-Instructions
+Open `http://localhost:3000`. The importer refuses to replace a nonempty database.
+For a genuinely fresh installation, see the administrator bootstrap instructions
+in [VERCEL.md](VERCEL.md). No default production password is created.
 
-API-Documentation
+## Deploy and move existing records
 
-Future-Enhancements
+Read **[VERCEL.md](VERCEL.md)** for exporting your local Docker database, importing
+records, moving photos into a private Vercel Blob store, environment settings, and
+deploying on Vercel. Database credentials and `.env.local` must not be committed.
 
-Contributing
+Vercel still needs a reachable external database. Online payment verification needs
+a trusted HTTPS provider; recording a settlement does not send money.
 
-License
+## Checks
 
-Features
+```sh
+npm run lint
+npm run typecheck
+npm test
+npm run build
+```
 
-Role-based access with dedicated dashboards for Admin, Manager, Agronomist, and Farmer
+`npm run test:integration` exercises a running app against a disposable database.
+It creates and removes test records; do not target production.
 
-IoT sensor integration for real-time monitoring of environmental conditions
-
-Crop management and task scheduling with irrigation and pesticide tracking
-
-Secure authentication and session management with bcrypt
-
-Integrated messaging module for intra-system communication
-
-PDF/CSV reporting and analytics tools
-
-Simulated payments and financial transaction logging
-
-Technology Stack
-
-Backend: PHP 8.x (Procedural + OOP)Frontend: HTML5, CSS3, Bootstrap, Vanilla JavaScriptDatabase: MySQL 8.x (InnoDB, Foreign Keys)Charts & Reports: Chart.js, TCPDF (optional)DevOps: Docker (optional), Git, Apache/NginxSecurity: Session management, CSRF tokens, hashed credentials
-
-System-Architecture
-
-smart-farm-system/
-├── api/                  # Lightweight REST endpoints
-├── config/               # Global configuration
-├── database/             # Schema and seed scripts
-├── public/               # Static assets and entry points
-├── src/
-│   ├── controllers/      # Request handling logic
-│   ├── models/           # DB abstraction and logic entities
-│   ├── views/            # UI templates and partials
-│   └── helpers/          # Utility functions
-└── README.md
-
-Project-Structure
-
-The project is structured to separate logic, presentation, configuration, and public assets in a modular fashion. API routes, business logic, views, and database utilities are all neatly organized under appropriate directories.
-
-Database-Schema-Overview
-
-users: Core user table with hashed credentials and role metadata
-
-sensors: Registered devices for environmental monitoring
-
-readings: Sensor telemetry with timestamps and thresholds
-
-crops: Crop lifecycle metadata including planting/harvest
-
-tasks: Scheduled irrigation/pesticide/harvesting operations
-
-payments: Ledger for transaction records and service usage
-
-messages: Internal chat module
-
-Schema and seed files are located in database/schema.sql and database/seed.sql.
-
-Setup-and-Installation
-
-1. Clone Repository
-
-git clone https://github.com/lixelamos/smart-farm-system.git && cd smart-farm-system
-
-2. Configure Application
-
-Copy and rename config sample:
-
-cp config/config.sample.php config/config.php
-
-Edit DB credentials and base URL in config.php.
-
-3. Provision Database
-
-mysql -u root -p smartfarm < database/schema.sql
-mysql -u root -p smartfarm < database/seed.sql   # Optional
-
-4. Launch Application
-
-Option A (Localhost): Configure Apache/Nginx to serve public/ directoryOption B (Docker):
+The original PHP files remain for reference and rollback, and are excluded from
+Vercel uploads. Legacy public `.php` URLs redirect to the corresponding Next.js pages.
+New development belongs in `app/`, `components/`, `lib/`, and `scripts/`.

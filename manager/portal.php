@@ -1,7 +1,8 @@
 <?php
 session_start();
-ob_clean();
+if (ob_get_level() > 0) { ob_clean(); }
 include "dbcon.php";
+require_once __DIR__."/../includes/ui.php";
 
 if (isset($_SESSION['manager'])) {
 	$sid = $_SESSION['manager'];
@@ -9,243 +10,21 @@ if (isset($_SESSION['manager'])) {
 	$usern = prepare(ucwords(mysqli_fetch_array($sql)['username']));
 
 ?>
-	<html>
-	<title>Manager portal</title>
+	<!doctype html><html lang="en"><head>
+	<title>Manager workspace · Smart Farm</title>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,user-scalable=0">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<head>
-		<link rel="shortcut icon" href="../images/favi.ico">
+		<link rel="shortcut icon" href="../images/favi.png">
 		<link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">
 		<script src="../js/jquery.js"></script>
 
-		<style>
-			* {
-				margin: 0px;
-			}
 
-			a {
-				text-decoration: none;
-			}
 
-			body {
-				background: #fff;
-				max-width: 1600px;
-				margin: 0 auto;
-				font-family: cambria;
-			}
+	<link rel="stylesheet" href="<?= sf_asset("css/design.css", "../") ?>"><link rel="stylesheet" href="<?= sf_asset("css/workspace.css", "../") ?>"><script src="<?= sf_asset("js/design.js", "../") ?>" defer></script><script src="<?= sf_asset("js/workspace.js", "../") ?>" defer></script>
+</head>
 
-			input[type=number],
-			[type=password],
-			[type=text],
-			[type=email],
-			[type=date],
-			[type=time],
-			select {
-				padding: 7px;
-				width: 250px;
-				border: 1px solid grey;
-				color: #2f4f4f;
-				font-size: 17px;
-				border-radius: 3px;
-				outline: none;
-				font-family: arial;
-			}
-
-			button:hover {
-				box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3);
-			}
-
-			aside {
-				background: #fff;
-				width: 24%;
-				float: left;
-				height: 100%;
-				overflow: auto;
-				background: #2E8B57;
-				max-width: 300px;
-				color: #fff;
-				box-shadow: inset 1px 1px 8px #00FF7F;
-				text-shadow: 0px 1px 1px #000;
-			}
-
-			section {
-				background: #fff;
-				width: 76%;
-				float: left;
-				height: 100%;
-				overflow: auto;
-				background: #fff;
-			}
-
-			@media screen and (max-width:850px) {
-
-				aside,
-				section {
-					display: none;
-				}
-			}
-
-			.lst:hover {
-				color: yellow;
-				cursor: pointer;
-			}
-
-			aside li {
-				margin-top: 19px;
-				font-family: sitka text;
-				font-size: 18px;
-				color: #fff;
-				list-style: none;
-			}
-
-			#progdv,
-			#toast,
-			#progr {
-				max-width: 300px;
-				background: #000;
-				position: fixed;
-				z-index: 99;
-				top: 40%;
-				left: 2%;
-				right: 2%;
-				margin: 0 auto;
-				height: auto;
-				padding: 10px;
-				color: #fff;
-				text-align: center;
-				border-radius: 5px;
-				display: none;
-				font-family: berlin sans fb;
-			}
-
-			#progdv {
-				width: 100px;
-				background: #DA70D6;
-				top: 37%;
-			}
-
-			#progr {
-				background: #2F4F4F;
-				top: 35%;
-			}
-
-			#calin {
-				width: 160px;
-				height: 40px;
-				background-color: #2E8B57;
-				font-family: arial;
-				cursor: pointer;
-				line-height: 40px;
-				color: #fff;
-				text-align: center;
-				border-radius: 5px;
-				margin-top: 2%;
-			}
-
-			#calin:hover {
-				background-color: #191970;
-			}
-
-			.btn {
-				cursor: pointer;
-				color: #fff;
-				padding: 8px;
-				border-radius: 3px;
-				background: #2E8B57;
-				border: 0px;
-				outline: none;
-				width: 80px;
-				text-shadow: 0px 1px 1px #000;
-			}
-
-			.htbl td {
-				height: 150px;
-				width: 200px;
-				border-radius: 5px;
-				font-family: lucida calligraphy;
-				color: #fff;
-				text-align: center;
-			}
-
-			.htbl td:hover {
-				opacity: .6;
-				cursor: pointer;
-			}
-
-			.tbl {
-				width: 100%;
-				font-family: sitka text;
-				border-collapse: collapse;
-			}
-
-			.tbl tr:nth-child(odd) {
-				background: #E6E6FA;
-			}
-
-			.tbl tr:nth-child(even) {
-				background: #F5F5DC;
-			}
-
-			.notbtn {
-				height: 25px;
-				width: 25px;
-				border: 1px solid #fff;
-				background: #ff4500;
-				color: #fff;
-				outline: none;
-				border-radius: 50%;
-				font-size: 13px
-			}
-
-			.udiv {
-				height: 70px;
-				padding: 5px;
-				width: 300px;
-				border: 1px solid #fff;
-			}
-
-			.udiv:hover {
-				background: #f0f0f0;
-				cursor: pointer
-			}
-
-			#nmsg {
-				width: 100%;
-				padding: 10px;
-				font-size: 16px;
-				color: #191970;
-				font-family: cambria;
-				resize: none;
-				height: 100px;
-			}
-
-			#nmsg:focus {
-				outline: 1px solid #008fff;
-			}
-
-			.bt {
-				float: right;
-				padding: 8px;
-				color: blue;
-				border: 1px solid #008080;
-				margin-left: 20px;
-				cursor: pointer;
-			}
-
-			.lnk {
-				color: blue;
-			}
-
-			.lnk:hover {
-				text-decoration: underline;
-				cursor: pointer
-			}
-		</style>
-
-	</head>
-
-	<body>
+	<body class="app-page role-manager"><a class="skip-link" href="#workspace-content">Skip to workspace</a>
 
 		<div id="progdv">Loading...</div>
 		<div id="toast">
@@ -255,34 +34,11 @@ if (isset($_SESSION['manager'])) {
 			<div id="progt"></div>
 		</div>
 
-		<aside>
-			<div style="padding:20px">
-				<h2 style="font-family:lucida calligraphy;font-size:20px;text-align:center;border-bottom:1px solid #fff;padding:10px 0px">
-					Manager <?php echo $usern; ?></h2><br>
-				<ul>
-					<li><span class="lst" onclick="window.location=window.location"><i class="fa fa-dashboard"></i> Dashboard</span></li>
-					<li><span class="lst" onclick="loadacc()"><i class="fa fa-address-book-o"></i> Account</span></li>
-					<li><span class="lst" onclick="loadpage('farmers')"><i class="fa fa-users"></i> Farmers</span></li>
-					<li><span class="lst" onclick="loadpage('sales')"><i class="fa fa-bar-chart"></i> Sales</span></li>
-					<li><span class="lst" onclick="loadpage('inputs')"><i class="fa fa-balance-scale"></i> Farm Inputs</span></li>
-					<li><span class="lst" onclick="loadpage('payments')"><i class="fa fa-money"></i> Payments</span></li>
-					<li><span class="lst" onclick="loadpage('news')"><i class="fa fa-bookmark-o"></i> News</span></li>
-					<li><span class="lst" onclick="loadpage('produce')"><i class="fa fa-lemon-o"></i> Produce</span></li>
-					<li><span class="lst" onclick="loadpage('agronomist')"><i class="fa fa-user-md"></i> Agronomists</span></li>
-				</ul>
-			</div>
-		</aside>
+		<?php sf_sidebar("manager", $usern, "../"); ?>
 
-		<section>
-			<div style="height:12%;width:100%;">
-				<img src="../images/logo.png" style="height:88%;margin:5px 20px;float:left"><br>
-				<h2 style="padding:10px;font-family:lucida calligraphy;font-size:19px;color:#2E8B57;">Smart Farm Processing System
-					<button style="float:right;background:#f08080" class="btn" onclick="window.location.replace('logout.php')"><i class="fa fa-power-off"></i> Logout</button>
-				</h2>
-			</div>
-			<div style="height:87%;overflow:auto;background:#fff;width:100%">
+		<section class="app-content" id="workspace-content"><?php sf_app_header("manager"); ?><div class="workspace-body">
 				<div class="mainactivity" style="padding:25px;">
-					<h3 style="color:#191970;text-align:center">Welcome <?php echo $usern; ?></h3><br>
+					<?php sf_overview($con, "manager", $usern); ?>
 					<div style="max-width:650px;margin:0 auto"><br>
 						<?php
 						$data = "";
@@ -324,7 +80,7 @@ if (isset($_SESSION['manager'])) {
 						<p style='font-size:14px;color:#2f4f4f'>$pd</p><p style='color:blue;text-align:right'><i>$dy</i></p></td></tr>";
 						}
 
-						echo "<div style='max-width:600px;margin:0 auto'><h4 style='color:blue'>Farm Inputs 
+						echo "<div style='max-width:600px;margin:0 auto'><h4 style='color:blue'>Farm Inputs
 					<button class='btn'style='float:right;background:#F08080;padding:5px'onclick=\"genpdf('inputs')\"><i class='fa fa-file-pdf-o'></i> PDF</button></h4><br>";
 						echo ($data == "") ? "<p style='background:#f0f0f0;border:1px solid #ccc;padding:10px'>No Farm Inputs found for farmers</p>" :
 							"<table cellpadding='10'>$data</table>";
@@ -343,7 +99,7 @@ if (isset($_SESSION['manager'])) {
 } else {
 	header("location:index.php");
 }
-ob_end_flush();
+if (ob_get_level() > 0) { ob_end_flush(); }
 ?>
 <script>
 	//save agronomist
@@ -397,7 +153,7 @@ ob_end_flush();
 		});
 	}
 
-	
+
 	function genpdf(rec) {
 		window.open("pdf/files/printout.php?tp=" + rec);
 	}

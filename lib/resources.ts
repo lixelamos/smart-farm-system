@@ -1,0 +1,294 @@
+import type { Role } from "./domain";
+export type Field = {
+  name: string;
+  label: string;
+  type?: "text" | "number" | "textarea" | "select" | "image" | "password";
+  options?: string[];
+  required?: boolean;
+};
+export type Resource = {
+  table: string;
+  title: string;
+  description: string;
+  columns: {
+    key: string;
+    label: string;
+    kind?: "money" | "date" | "status" | "image";
+  }[];
+  fields: Field[];
+  read: Role[];
+  write: Role[];
+  remove?: Role[];
+};
+const staff: Role[] = ["admin", "manager"];
+const everyone: Role[] = ["admin", "manager", "farmer"];
+const regions = [
+  "Narok North",
+  "Narok East",
+  "Narok South",
+  "Narok West",
+  "Kilgoris",
+  "Emurua Dikirr",
+];
+export const resources: Record<string, Resource> = {
+  farmers: {
+    table: "farmers",
+    title: "Farmers",
+    description:
+      "The people growing Narok. Review registrations and manage approved accounts.",
+    columns: [
+      { key: "name", label: "Farmer" },
+      { key: "phone", label: "Phone" },
+      { key: "idno", label: "ID number" },
+      { key: "location", label: "Sub-county" },
+      { key: "status", label: "Approval", kind: "status" },
+    ],
+    fields: [
+      { name: "name", label: "Full name", required: true },
+      { name: "phone", label: "Phone number", required: true },
+      { name: "idno", label: "ID number", required: true },
+      {
+        name: "location",
+        label: "Sub-county",
+        type: "select",
+        options: regions,
+        required: true,
+      },
+      { name: "password", label: "Initial password", type: "password" },
+    ],
+    read: staff,
+    write: ["admin"],
+    remove: [],
+  },
+  agronomists: {
+    table: "agronomists",
+    title: "Agronomists",
+    description: "Connect farmers with local expertise.",
+    columns: [
+      { key: "name", label: "Agronomist" },
+      { key: "phone", label: "Phone" },
+      { key: "location", label: "Sub-county" },
+      { key: "photo", label: "Photo", kind: "image" },
+    ],
+    fields: [
+      { name: "name", label: "Full name", required: true },
+      { name: "phone", label: "Phone number", required: true },
+      {
+        name: "location",
+        label: "Sub-county",
+        type: "select",
+        options: regions,
+        required: true,
+      },
+      { name: "photo", label: "Profile photo", type: "image" },
+      { name: "password", label: "Initial password", type: "password" },
+    ],
+    read: staff,
+    write: ["manager"],
+    remove: ["manager"],
+  },
+  stations: {
+    table: "stations",
+    title: "Pickup stations",
+    description: "Collection points close to the people who grow.",
+    columns: [
+      { key: "station", label: "Station" },
+      { key: "county", label: "Sub-county" },
+    ],
+    fields: [
+      { name: "station", label: "Station name", required: true },
+      {
+        name: "county",
+        label: "Sub-county",
+        type: "select",
+        options: regions,
+        required: true,
+      },
+    ],
+    read: everyone,
+    write: ["admin"],
+    remove: ["admin"],
+  },
+  demand: {
+    table: "demand",
+    title: "Produce demand",
+    description: "Open opportunities, clear quantities, and fair records.",
+    columns: [
+      { key: "product", label: "Produce" },
+      { key: "measure", label: "Unit" },
+      { key: "rate", label: "Rate", kind: "money" },
+      { key: "maxsupply", label: "Remaining demand" },
+      { key: "status", label: "Availability", kind: "status" },
+    ],
+    fields: [
+      { name: "product", label: "Produce name", required: true },
+      { name: "measure", label: "Unit of measure", required: true },
+      {
+        name: "rate",
+        label: "Price per unit (KES)",
+        type: "number",
+        required: true,
+      },
+      {
+        name: "maxsupply",
+        label: "Quantity required",
+        type: "number",
+        required: true,
+      },
+    ],
+    read: everyone,
+    write: ["admin"],
+    remove: [],
+  },
+  inputs: {
+    table: "inputs",
+    title: "Farm inputs",
+    description:
+      "The essentials for your next season, with purchases kept in view.",
+    columns: [
+      { key: "photo", label: "Photo", kind: "image" },
+      { key: "name", label: "Input" },
+      { key: "details", label: "Details" },
+      { key: "county", label: "Sub-county" },
+      { key: "cost", label: "Price", kind: "money" },
+    ],
+    fields: [
+      { name: "name", label: "Input name", required: true },
+      {
+        name: "details",
+        label: "Usage and details",
+        type: "textarea",
+        required: true,
+      },
+      { name: "cost", label: "Price (KES)", type: "number", required: true },
+      {
+        name: "county",
+        label: "Sub-county",
+        type: "select",
+        options: regions,
+        required: true,
+      },
+      { name: "photo", label: "Product photo", type: "image" },
+    ],
+    read: everyone,
+    write: ["admin"],
+    remove: ["admin"],
+  },
+  products: {
+    table: "products",
+    title: "Products",
+    description: "Explore the catalogue and track your orders.",
+    columns: [
+      { key: "photo", label: "Photo", kind: "image" },
+      { key: "product", label: "Product" },
+      { key: "details", label: "Details" },
+      { key: "cost", label: "Price", kind: "money" },
+    ],
+    fields: [
+      { name: "product", label: "Product name", required: true },
+      { name: "details", label: "Details", type: "textarea", required: true },
+      { name: "cost", label: "Price (KES)", type: "number", required: true },
+      { name: "photo", label: "Product photo", type: "image" },
+    ],
+    read: everyone,
+    write: ["admin"],
+    remove: ["admin"],
+  },
+  supplies: {
+    table: "supplies",
+    title: "Produce supplies",
+    description:
+      "From your field to the collection point. Keep every delivery accounted for.",
+    columns: [
+      { key: "farmer_name", label: "Farmer" },
+      { key: "produce", label: "Produce" },
+      { key: "quantity", label: "Quantity" },
+      { key: "station", label: "Collection point" },
+      { key: "total", label: "Value", kind: "money" },
+      { key: "status", label: "Verification", kind: "status" },
+      { key: "paid", label: "Payment", kind: "status" },
+      { key: "time", label: "Submitted", kind: "date" },
+    ],
+    fields: [],
+    read: everyone,
+    write: [],
+    remove: [],
+  },
+  sales: {
+    table: "sales",
+    title: "Input purchases",
+    description: "Purchase records and payment status for farm inputs.",
+    columns: [
+      { key: "farmer_name", label: "Farmer" },
+      { key: "product", label: "Input" },
+      { key: "cost", label: "Amount", kind: "money" },
+      { key: "paid", label: "Payment", kind: "status" },
+      { key: "time", label: "Ordered", kind: "date" },
+    ],
+    fields: [],
+    read: everyone,
+    write: [],
+    remove: [],
+  },
+  purchases: {
+    table: "purchases",
+    title: "Product purchases",
+    description: "Every product order, with its payment history.",
+    columns: [
+      { key: "farmer_name", label: "Farmer" },
+      { key: "item", label: "Product" },
+      { key: "details", label: "Details" },
+      { key: "cost", label: "Amount", kind: "money" },
+      { key: "paid", label: "Payment", kind: "status" },
+      { key: "time", label: "Ordered", kind: "date" },
+    ],
+    fields: [],
+    read: everyone,
+    write: [],
+    remove: [],
+  },
+  payments: {
+    table: "payments",
+    title: "Payments",
+    description:
+      "A ledger of recorded transactions. Entries are records, not automatic bank transfers.",
+    columns: [
+      { key: "farmer_name", label: "Farmer" },
+      { key: "description", label: "Description" },
+      { key: "mode", label: "Method" },
+      { key: "transaction", label: "Reference" },
+      { key: "amount", label: "Amount", kind: "money" },
+      { key: "time", label: "Recorded", kind: "date" },
+    ],
+    fields: [],
+    read: everyone,
+    write: [],
+    remove: [],
+  },
+  news: {
+    table: "news",
+    title: "County news",
+    description:
+      "Local information, practical updates, and knowledge worth sharing.",
+    columns: [
+      { key: "county", label: "Sub-county" },
+      { key: "source", label: "Source" },
+      { key: "message", label: "Update" },
+      { key: "time", label: "Published", kind: "date" },
+    ],
+    fields: [
+      {
+        name: "county",
+        label: "Sub-county",
+        type: "select",
+        options: regions,
+        required: true,
+      },
+      { name: "source", label: "Source", required: true },
+      { name: "message", label: "Update", type: "textarea", required: true },
+    ],
+    read: ["admin", "manager", "farmer", "agronomist"],
+    write: ["admin", "manager", "agronomist"],
+    remove: ["admin", "manager", "agronomist"],
+  },
+};

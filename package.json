@@ -1,0 +1,45 @@
+{
+  "name": "narok-smart-farm",
+  "version": "2.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --hostname 0.0.0.0",
+    "build": "next build",
+    "start": "next start --hostname 0.0.0.0",
+    "lint": "eslint app components lib scripts tests/next --max-warnings=0",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/next/*.test.ts",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "db:bootstrap": "tsx scripts/bootstrap.ts",
+    "db:import": "tsx scripts/import-legacy.ts",
+    "assets:migrate": "tsx scripts/migrate-assets.ts",
+    "db:recovery": "tsx scripts/recovery.ts",
+    "db:check": "tsx scripts/migration-check.ts",
+    "test:integration": "RUN_INTEGRATION_TESTS=1 tsx --test tests/next/api.integration.test.ts"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@vercel/blob": "^2.9.0",
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^18.0.10",
+    "lucide-react": "^1.72.0",
+    "mysql2": "^3.24.6",
+    "next": "^16.4.6",
+    "pdf-lib": "^1.17.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "server-only": "^0.0.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.4.6",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3"
+  }
+}

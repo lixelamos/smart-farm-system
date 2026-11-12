@@ -109,7 +109,7 @@ if (isset($_GET['agronchats'])) {
 		while ($rw = mysqli_fetch_assoc($sqr)) {
 			$name = prepare(ucwords($rw['name']));
 			$data .= "<div class='udiv'onclick=\"gotochat('$sen','$flow')\">
-				<img src='images/user.png'style='height:100%;float:left;margin-right:20px;border-radius:50%'><h4>$name $cnd</h4>
+				<img src='images/user.svg'style='height:100%;float:left;margin-right:20px;border-radius:50%'><h4>$name $cnd</h4>
 				<p style='color:grey;padding:5px 0px'>$cond</p>
 				</div><br>";
 		}
@@ -332,7 +332,7 @@ if (isset($_GET['chats'])) {
 		$no = mysqli_num_rows($sq);
 		$cond = ($nu == 1) ? "1 Message" : "$nu Messages";
 		$cnd = ($no > 0) ? "<button class='notbtn'style='background:green' >$no</button>" : "";
-		$img = ($pic == "none") ? "images/user.png" : "photos/$pic";
+		$img = ($pic == "none") ? "images/user.svg" : "photos/$pic";
 		$data .= "<div class='udiv' onclick=\"gotochat('$sen','$flow')\">
 			<div style=\"width:60px;height:60px;border-radius:50%;background-image:url('$img');background-size:cover;float:left;margin-right:20px\"></div>
 			<h4 style='color:#008080'>$name $cnd</h4><p style='color:#2f4f4f;font-size:14px'><i class='fa fa-map-marker'></i> <i>$loc</i></p>
@@ -353,7 +353,7 @@ if (isset($_GET['agacc'])) {
 		$loc = prepare($row['location']);
 		$fon = strip_tags(stripslashes($row['phone']));
 		$pic = $row['photo'];
-		$logo = ($pic == "none") ? "images/user.png" : "photos/$pic";
+		$logo = ($pic == "none") ? "images/user.svg" : "photos/$pic";
 	}
 
 	$cos = array("Narok North", "Narok East", "Narok South", "Narok West", "Kilgoris", "Emurua Dikirr");

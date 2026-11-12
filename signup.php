@@ -1,183 +1,28 @@
-	<?php
-
-	$opts = "";
-	$subs = array("Narok North", "Narok East", "Narok South", "Narok West", "Kilgoris", "Emurua Dikirr");
-	foreach ($subs as $sub) {
-		$opts .= "<option value='$sub'>$sub</option>";
-	}
-
-	?>
-
-	<!DOCTYPE html>
-	<html>
-	<title>Farmer registration</title>
-
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, height=device-height,  initial-scale=1.0, user-scalable=no, user-scalable=0" />
-		<link rel="shortcut icon" href="./images/favi.png">
-		<link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">
-		<script src="js/jquery.js"></script>
-		<style type="text/css">
-			* {
-				margin: 0px;
-			}
-
-			body {
-				background: #ffdead;
-				background: linear-gradient(to right, #f8f8f8, #f8f0f0, #f0f8f8);
-				font-family: cambria;
-			}
-
-			::placeholder {
-				color: #008080;
-			}
-
-			.main {
-				min-height: 400px;
-				margin: 0 auto;
-				background: #fff;
-				width: 96%;
-				max-width: 400px;
-				margin-top: 20px;
-				box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.3);
-			}
-
-			input[type=text],
-			[type=password],
-			[type=number],
-			select {
-				padding: 5px;
-				background: transparent;
-				width: 96%;
-				border: 0px;
-				outline: none;
-				border-bottom: 1.5px solid #2f4f4f;
-				font-family: arial;
-				color: #008080;
-				font-size: 17px;
-				font-family: FontAwesome;
-			}
-
-			.btn {
-				padding: 10px;
-				border: 0px;
-				width: 47%;
-				background: #2E8B57;
-				border: 1px solid #2f4f4f;
-				cursor: pointer;
-				color: #fff;
-				font-weight: bold;
-				outline: none;
-				text-shadow: 0px 1px 1px #000;
-			}
-
-			.err {
-				padding: 7px;
-				border: 1px solid #FA8072;
-				color: #ff4500;
-				background: #FFE4C4;
-			}
-
-			.succ {
-				padding: 7px;
-				border: 1px solid green;
-				color: #2E8B57;
-				background: #E0FFFF;
-			}
-
-			.prog {
-				width: 90%;
-				margin: 0 auto;
-				position: fixed;
-				top: 30%;
-				left: 5%;
-				right: 5%;
-				height: 100px;
-				background: #fff;
-				z-index: 9;
-				max-width: 300px;
-				border-radius: 5px;
-				overflow: auto;
-				display: none;
-			}
-
-			.wrap {
-				background: rgba(0, 0, 0, 0.8);
-				position: fixed;
-				height: 100%;
-				width: 100%;
-				z-index: 8;
-				top: 0;
-				display: none;
-			}
-
-			a {
-				text-decoration: none;
-			}
-		</style>
-	</head>
-
-	<body>
-		<div class="wrap"></div>
-		<div class="prog"></div>
-		<div class="main">
-			<center><img src="assets/images/logo.png>" style="margin-top:10px;height:80px;"></center>
-			<p style="font-family:rockwell;color:#191970;text-align:center;font-size:18px">SFPS Farmer Signup</p><br>
-			<div style="padding:20px;font-family:tahoma;color:#191970">
-				<form method="post" id="fom" onsubmit="save(event)">
-					<p><input type="text" name="fname" placeholder="&#xf007 Full name" autocomplete="off" maxlength="20" autofocus required></p><br>
-					<p style="margin-top:10px"><input type="number" name="fon" placeholder="&#xf095 Phone number" autocomplete="off" required></p><br>
-					<p style="margin-top:10px"><input type="number" name="idno" placeholder="&#xf022 Id Number" autocomplete="off" required></p><br>
-					<p style="margin-top:10px"><input type="password" name="pass" placeholder="&#xf084 Password" autocomplete="off" required></p><br>
-					<p style="margin-top:10px"><select name="loc"><?php echo $opts; ?><select></p><br><br>
-					<p><button class="btn" type="submit">Create account</button> <a href="login.php" style="float:right">Account Login</a></p>
-				</form>
-			</div>
-		</div>
-
-	</body>
-
-	</html>
-
-	<script>
-		function save(e) {
-			e.preventDefault();
-			var data = new FormData(_("fom"));
-			progressd("Processing...please wait");
-			var x = new XMLHttpRequest();
-			x.onreadystatechange = function() {
-				if (x.status == 200 && x.readyState == 4) {
-					if (x.responseText.trim() == "success") {
-						progressd("Creation successful. Redirecting...");
-						setTimeout(function() {
-							window.location.replace("login.php");
-						}, 1000);
-					} else {
-						progressd("");
-						setTimeout(function() {
-							alert(x.responseText.trim());
-						}, 800);
-					}
-				}
-			}
-			x.open("post", "accountsaver.php", true);
-			x.send(data);
-		}
-
-		function progressd(t) {
-			if (t != "") {
-				$(".wrap").fadeIn();
-				$(".prog").fadeIn();
-				$(".prog").html("<p style='color:blue;line-height:100px;text-align:center'>" + t + "</p>");
-			} else {
-				$(".wrap").fadeOut();
-				$(".prog").fadeOut();
-				$(".prog").html("");
-			}
-		}
-
-		function _(el) {
-			return document.getElementById(el);
-		}
-	</script>
+<?php
+require_once __DIR__ . "/includes/ui.php";
+$subs = [
+    "Narok North",
+    "Narok East",
+    "Narok South",
+    "Narok West",
+    "Kilgoris",
+    "Emurua Dikirr",
+];
+?>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><link rel="preload" href="fonts/SourceSans3.ttf" as="font" type="font/ttf" crossorigin><meta name="viewport" content="width=device-width, initial-scale=1"><title>Create a farmer account · Smart Farm</title><link rel="icon" href="images/favi.png"><link rel="stylesheet" href="<?= sf_asset("css/design.css", "") ?>"><script src="<?= sf_asset("js/signup.js", "") ?>" defer></script></head>
+<body class="auth-page"><a class="skip-link" href="#registration-form">Skip to registration</a><header class="public-header container"><?php sf_brand(); ?><a class="text-link" href="index.php">← Back to home</a></header>
+<main class="auth-layout container"><section class="auth-story"><p class="eyebrow">NAROK COUNTY · FARMER REGISTRATION</p><h1>A local connection.<br>For your next season.</h1><p>Join a community built around your farm. Find produce opportunities, access inputs, and connect with people who can help.</p><img src="<?= sf_asset("images/field-map.svg", "") ?>" width="640" height="450" alt="An illustration of Narok-inspired highland fields"><div class="story-note"><span class="status-dot"></span> Your account will be reviewed by an administrator.</div></section>
+<section class="auth-panel register-panel" aria-labelledby="registration-heading"><div class="auth-panel-top"><span class="section-number">JOIN THE COMMUNITY</span><span class="role-tag">Farmer registration</span></div><h2 id="registration-heading">Join your farming community.</h2><p class="muted">Create your farmer account. Once approved, you can sign in and explore your workspace.</p>
+<form id="registration-form" method="post" action="accountsaver.php"><div class="feedback error" id="registration-error" role="alert" hidden></div><div class="feedback success" id="registration-success" role="status" hidden></div>
+<label for="full-name">Full name</label><input id="full-name" type="text" name="fname" placeholder="Your full name" autocomplete="name" maxlength="20" required>
+<div class="form-row"><div><label for="phone">Phone number</label><input id="phone" type="tel" name="fon" placeholder="0712345678" inputmode="numeric" pattern="[0-9]+" autocomplete="tel" required></div><div><label for="id-number">ID number</label><input id="id-number" type="text" name="idno" placeholder="National ID number" inputmode="numeric" pattern="[0-9]+" required></div></div>
+<label for="location">Sub-county</label><select id="location" name="loc" required><option value="" disabled selected>Select your sub-county</option><?php foreach (
+    $subs
+    as $sub
+): ?><option value="<?= sf_escape($sub) ?>"><?= sf_escape(
+    $sub,
+) ?></option><?php endforeach; ?></select>
+<label for="password">Password</label><input id="password" type="password" name="pass" autocomplete="new-password" placeholder="Choose a password" required>
+<button class="button button-primary auth-submit" type="submit">Create farmer account <span aria-hidden="true"><svg class="arrow-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14" stroke="currentColor" stroke-width="1.5"/></svg></span></button></form><p class="auth-register">Already part of the community? <a href="login.php">Sign in</a></p></section></main><footer class="simple-footer container"><span>© <?= date(
+    "Y",
+) ?> Smart Farm</span><span>Agriculture, rooted in Narok.</span></footer></body></html>

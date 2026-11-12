@@ -1,5 +1,7 @@
 <?php
+session_start();
 include "dbcon.php";
+require_once __DIR__."/../includes/manager-passwords.php";
 
 //save agronomist
 if (isset($_POST['agname'])) {
@@ -136,15 +138,43 @@ if (isset($_POST['src'])) {
 }
 
 if (isset($_POST['manager'])) {
-	$user = clean($_POST['manager']);
-	$pass = clean($_POST['pass']);
-	$sid = trim($_POST['sid']);
-
-	if (mysqli_query($con, "UPDATE `manager` SET `username`='$user',`password`='$pass' WHERE `id`='$sid'")) {
-		echo 'Details updated successful';
-	} else {
-		echo 'Failed to update account';
-	}
+    if (empty($_SESSION['manager']) || (int)($_POST['sid'] ?? 0) !== (int)$_SESSION['manager']) {
+        http_response_code(403); echo 'Please sign in again.'; exit;
+    }
+    if (!is_string($_POST['csrf'] ?? null) || !isset($_SESSION['manager_account_csrf']) || !hash_equals($_SESSION['manager_account_csrf'], $_POST['csrf'])) {
+        http_response_code(403); echo 'Refresh your account page and try again.'; exit;
+    }
+    $user = strtolower(trim((string)$_POST['manager']));
+    $pass = (string)($_POST['pass'] ?? '');
+    $sid = (int)$_SESSION['manager'];
+    if ($user === '') { echo 'Username is required.'; exit; }
+    if ($pass !== '' && (mb_strlen($pass) < 12 || strlen($pass) > 72)) {
+        echo 'Use a new password with at least 12 characters and no more than 72 bytes.'; exit;
+    }
+    $con->begin_transaction();
+    try {
+        if ($pass === '') {
+            $update = $con->prepare('UPDATE manager SET username = ? WHERE id = ?');
+            $update->bind_param('si', $user, $sid);
+        } else {
+            $hash = password_hash($pass, PASSWORD_BCRYPT);
+            $update = $con->prepare('UPDATE manager SET username = ?, password = ? WHERE id = ?');
+            $update->bind_param('ssi', $user, $hash, $sid);
+        }
+        $update->execute();
+        if ($pass !== '') {
+            try {
+                $delete = $con->prepare('DELETE FROM manager_password_resets WHERE manager_id = ?');
+                $delete->bind_param('i', $sid); $delete->execute();
+            } catch (mysqli_sql_exception $error) {
+                if ($error->getCode() !== 1146) throw $error;
+            }
+        }
+        $con->commit();
+        echo 'Details updated successful';
+    } catch (Throwable $error) {
+        $con->rollback(); echo 'Failed to update account';
+    }
 }
 
 //produce
@@ -339,21 +369,25 @@ if (isset($_GET['tp'])) {
 
 	//update account details
 	if ($tp == "myacc") {
-		$uid = trim($_GET['vl']);
+        if (empty($_SESSION['manager']) || (int)($_GET['vl'] ?? 0) !== (int)$_SESSION['manager']) {
+            http_response_code(403); echo 'Please sign in again.'; exit;
+        }
+        $_SESSION['manager_account_csrf'] ??= bin2hex(random_bytes(32));
+		$uid = (int)$_SESSION['manager'];
 		$sql = mysqli_query($con, "SELECT *FROM `manager` WHERE `id`='$uid'");
 		while ($row = mysqli_fetch_array($sql)) {
 			$adm = ucwords(strip_tags(stripslashes($row['username'])));
-			$pass = strip_tags(stripslashes($row['password']));
+
 		}
 	?>
 		<div style="padding:10px;width:260px;margin:20px;">
 			<form method="post" id="ufom" onsubmit="saveacc(event)">
-				<input type="hidden" name="sid" value="<?php echo $uid; ?>">
+				<input type="hidden" name="sid" value="<?php echo $uid; ?>"><input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['manager_account_csrf'], ENT_QUOTES, 'UTF-8'); ?>">
 				<p style="font-size:22px;font-family:rockwell">Manager account</p><br>
-				<p>Username<br><input type="text" name="manager" value="<?php echo $adm; ?>" required></p><br>
+				<p>Username<br><input type="text" name="manager" value="<?php echo htmlspecialchars($adm, ENT_QUOTES, 'UTF-8'); ?>" required></p><br>
 				Password<br>
 				<div style="width:245px;border:1px solid grey;border-radius:3px;background:#fff">
-					<input type="password" name="pass" id="upass" value="<?php echo $pass; ?>" style="width:215px;border:0px;" required>
+					<input type="password" name="pass" id="upass" value="" autocomplete="new-password" placeholder="Leave blank to keep your password" minlength="12" style="width:215px;border:0px;">
 					<p style="float:right;margin:7px"><i class="fa fa-eye" style="cursor:pointer" onclick="showps()" id="sps"></i><i class="fa fa-eye-slash" style="cursor:pointer;display:none" onclick="showps()" id="hdps"></i></p>
 				</div>
 				<br><button class="btn" style="float:right">SAVE</button>

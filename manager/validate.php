@@ -1,19 +1,24 @@
 <?php
-	session_start();
-	include "dbcon.php";
-	
-	if(isset($_POST['usern'],$_POST['password'])){
-		$user=trim(strtolower(mysqli_real_escape_string($con,addslashes($_POST['usern']))));
-		$pass=trim(mysqli_real_escape_string($con,addslashes($_POST['password'])));
-		
-		$sql=mysqli_query($con,"SELECT *FROM `manager` WHERE `username`='$user' AND `password`='$pass'");
-		if(mysqli_num_rows($sql)===0){
-			echo "Incorrect username or password";
-		}
-		else{
-			$_SESSION['manager']=mysqli_fetch_array($sql)['id'];
-			echo "success";
-		}
-	}
-	
-?>
+session_start();
+require __DIR__ . "/dbcon.php";
+require __DIR__ . "/../includes/manager-passwords.php";
+if (isset($_POST["usern"], $_POST["password"])) {
+    $username = strtolower(trim((string) $_POST["usern"]));
+    $password = (string) $_POST["password"];
+    $query = $con->prepare(
+        "SELECT id, password FROM manager WHERE username = ? LIMIT 1",
+    );
+    $query->bind_param("s", $username);
+    $query->execute();
+    $manager = $query->get_result()->fetch_assoc();
+    if (
+        !$manager ||
+        !sf_manager_password_matches($password, $manager["password"])
+    ) {
+        echo "Incorrect username or password";
+        exit();
+    }
+    session_regenerate_id(true);
+    $_SESSION["manager"] = (int) $manager["id"];
+    echo "success";
+}

@@ -1,7 +1,8 @@
 <?php
 session_start();
-ob_clean();
+if (ob_get_level() > 0) { ob_clean(); }
 include "dbcon.php";
+require_once __DIR__."/includes/ui.php";
 
 if (isset($_SESSION['farmer'])) {
 	$sid = $_SESSION['farmer'];
@@ -11,226 +12,20 @@ if (isset($_SESSION['farmer'])) {
 	$fon = $row['phone'];
 
 ?>
-	<html>
-	<title>My Account</title>
+	<!doctype html><html lang="en"><head>
+	<title>Farmer workspace · Smart Farm</title>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,user-scalable=0">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<head>
-		<link rel="shortcut icon" href="images/favi.ico">
+		<link rel="shortcut icon" href="images/favi.png">
 		<link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">
 		<script src="js/jquery.js"></script>
 
-		<style>
-			* {
-				margin: 0px;
-			}
 
-			a {
-				text-decoration: none;
-			}
+	<link rel="stylesheet" href="<?= sf_asset("css/design.css", "") ?>"><link rel="stylesheet" href="<?= sf_asset("css/workspace.css", "") ?>"><script src="<?= sf_asset("js/design.js", "") ?>" defer></script><script src="<?= sf_asset("js/workspace.js", "") ?>" defer></script>
+</head>
 
-			body {
-				background: #fff;
-				max-width: 1600px;
-				margin: 0 auto;
-				font-family: cambria;
-			}
-
-			input[type=number],
-			[type=password],
-			[type=text],
-			[type=email],
-			[type=date],
-			[type=time],
-			select {
-				padding: 7px;
-				width: 250px;
-				border: 1px solid grey;
-				color: #2f4f4f;
-				font-size: 17px;
-				border-radius: 3px;
-				outline: none;
-				font-family: arial;
-			}
-
-			.main {
-				width: 100%;
-				max-width: 1000px;
-				margin: 0 auto;
-				height: 100%;
-			}
-
-			button:hover {
-				box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3);
-			}
-
-			@media screen and (min-width:701px) {
-				aside {
-					width: 25%;
-					float: left;
-					height: 100%;
-					background: #fff;
-					overflow: auto
-				}
-
-				section {
-					width: 75%;
-					float: left;
-					height: 100%;
-					background: #fff;
-					overflow: auto;
-				}
-
-				nav,
-				.stop {
-					display: none;
-				}
-
-				.ltop {
-					display: block;
-				}
-			}
-
-			@media screen and (max-width:700px) {
-				aside {
-					display: none;
-					width: 0px;
-					position: fixed;
-					left: 0;
-					top: 0;
-					z-index: 3;
-					background: #fff;
-					height: 100%
-				}
-
-				section {
-					width: 100%;
-				}
-
-				nav {
-					width: 100%;
-					height: 100px;
-					position: fixed;
-					top: 0;
-					z-index: 2;
-					background: #fff;
-					border-bottom: 1px solid #ccc;
-				}
-
-				.ext {
-					height: 110px;
-					width: 100%;
-				}
-
-				.stop {
-					display: block;
-					height: 50px
-				}
-
-				.ltop {
-					display: none;
-				}
-			}
-
-			.btn {
-				background: #2E8B57;
-				padding: 7px;
-				border: 0px;
-				border-radius: 3px;
-				color: #fff;
-				outline: none;
-				text-shadow: 0px 1px 1px #000;
-				cursor: pointer;
-				min-width: 80px;
-			}
-
-			ul li {
-				list-style: none;
-				color: #4682b4;
-			}
-
-			.lst:hover {
-				color: blue;
-				cursor: pointer
-			}
-
-			.notbtn {
-				height: 25px;
-				width: 25px;
-				border: 1px solid #fff;
-				background: #ff4500;
-				color: #fff;
-				outline: none;
-				border-radius: 50%;
-				font-size: 13px
-			}
-
-			#progdv,
-			#toast,
-			#progr {
-				max-width: 300px;
-				background: #000;
-				position: fixed;
-				z-index: 99;
-				top: 40%;
-				left: 2%;
-				right: 2%;
-				margin: 0 auto;
-				height: auto;
-				padding: 10px;
-				color: #fff;
-				text-align: center;
-				border-radius: 5px;
-				display: none;
-				font-family: berlin sans fb;
-			}
-
-			#progdv {
-				width: 100px;
-				background: #DA70D6;
-				top: 37%;
-			}
-
-			#progr {
-				background: #2F4F4F;
-				top: 35%;
-			}
-
-			.hd {
-				padding: 8px;
-				background: #F0FFFF;
-				color: #2E8B57;
-				border: 1px solid #8FBC8F;
-				text-align: center
-			}
-
-			.udiv {
-				height: 70px;
-				padding: 5px;
-				max-width: 300px;
-				border: 1px solid #fff;
-			}
-
-			.udiv:hover {
-				background: #f0f0f0;
-				cursor: pointer
-			}
-
-			.pcard {
-				width: 100px;
-				text-align: center;
-				background: #F4A460;
-				padding: 10px;
-				border-top-left-radius: 25px;
-				border-bottom-right-radius: 25px;
-				text-shadow: 0px 1px 1px #000;
-				color: #fff;
-			}
-		</style>
-	</head>
-
-	<body>
+	<body class="app-page role-farmer"><a class="skip-link" href="#workspace-content">Skip to workspace</a>
 
 		<div id="progdv">Loading...</div>
 		<div id="toast">
@@ -241,42 +36,14 @@ if (isset($_SESSION['farmer'])) {
 		</div>
 
 		<div class="main">
-			<nav>
-				<i class="fa fa-bars" style="float:left;margin:40px 10px 0px 20px;color:#008080;font-size:25px" onclick="sidebar('show')"></i>
-				<img src="images/logo.png" style="margin:10px 15px;height:80px;float:left">
-				<h3 style="line-height:100px">Smart SPF</h3>
-			</nav>
-			<aside>
-				<div style="padding:10px;max-width:300px"><br>
-					<div class="stop"><i class="fa fa-times" style="float:right;font-size:25px;color:brown" onclick="sidebar('hide')"></i><br></div>
-					<center>
-						<div class="ltop"><img src="images/logo.png" height="100">
-							<h4 style="color:#2E8B57">Smart Farm Solution System SFSS</h4><br>
-						</div>
-						<div style="padding:10px 5px;box-shadow:inset 0px 0px 4px #ccc;background:#F0FFFF">
-							<h4 style="color:#4682b4;"><?php echo $usern; ?></h4>
-							<p style="text-align:right;margin:10px"><button class="btn" onclick="window.location.replace('logout.php?sess=farmer')">
-									<i class="fa fa-power-off"></i> Logout</button></p>
-						</div>
-					</center><br>
-					<ul>
-						<li><span class="lst" onclick="window.location=window.location"><i class="fa fa-home"></i> Home</span></li><br>
-						<li><span class="lst" onclick="loadpage('myacc')"><i class="fa fa-user-o"></i> My account</span></li><br>
-						<li><span class="lst" onclick="loadpage('chats')"><i class="fa fa-comments-o"></i> Chats</span><span id="notar"></span></li><br>
-						<li><span class="lst" onclick="loadpage('payments')"><i class="fa fa-money"></i> Payments<span></li><br>
-						<li><span class="lst" onclick="loadpage('produce')"><i class="fa fa-lemon-o"></i> Farm Produce</span></li><br>
-						<li><span class="lst" onclick="loadpage('inputs')"><i class="fa fa-balance-scale"></i> Farm Inputs</span></li><br>
-						<li><span class="lst" onclick="loadpage('products')"><i class="fa fa-leaf"></i> Products</span></li><br>
-					</ul>
-				</div>
-			</aside>
-			<section>
-				<div class="ext"></div>
+			<?php sf_sidebar("farmer", $usern); ?>
+			<section class="app-content" id="workspace-content"><?php sf_app_header("farmer"); ?>
+
 				<div class="mainactivity" style="padding:20px">
-					<div style="max-width:450px;margin:0 auto">
+					<div class="overview-data">
 						<br>
-						<h3>Welcome <?php echo $usern; ?></h3><br>
-						<h4 style='color:blue'>SFSS Product Demands</h4>
+						<?php sf_overview($con, "farmer", $usern); ?>
+						<h4 style='color:blue'>Current produce demand</h4>
 						<?php
 						$data = "";
 						$sql = mysqli_query($con, "SELECT *FROM `demand`");
@@ -291,7 +58,7 @@ if (isset($_SESSION['farmer'])) {
 						}
 						echo "<table cellpadding='10' style='width:100%;border:1px solid #ccc;border-collapse:collapse' border='1'>
 				<tr style='font-weight:bold'><td>Product</td><td>Demand</td><td>Status</td></tr>$data</table>";
-						echo "<br><h4 style='color:blue'>County News</h4><br>";
+						echo "<br><h4 style='color:blue'>County updates</h4><br>";
 						$res = "";
 						$sql = mysqli_query($con, "SELECT *FROM `news` ORDER BY `time` DESC");
 						while ($row = mysqli_fetch_assoc($sql)) {
@@ -319,7 +86,7 @@ if (isset($_SESSION['farmer'])) {
 } else {
 	header("location:login.php");
 }
-ob_end_flush();
+if (ob_get_level() > 0) { ob_end_flush(); }
 
 ?>
 

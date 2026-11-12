@@ -1,6 +1,7 @@
 <?php
 
 include "dbcon.php";
+require_once __DIR__."/includes/ui.php";
 
 if(isset($_GET['sen'])){
 	$data="";
@@ -13,51 +14,28 @@ if(isset($_GET['sen'])){
 
 ?>
 
-<html>
+<!doctype html><html lang="en"><head>
 <title>Chats</title>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0, user-scalable=0">
-<link rel="shortcut icon" href="images/favi.ico">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="shortcut icon" href="images/favi.png">
 <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">
 <script type="text/javascript" src="js/jquery.js"></script>
 
-<style>
-*{margin:0px;}
-.main{
-	max-width:500px;width:100%;margin:0 auto;background:#fff;height:83%;box-shadow:inset 0px 3px 4px rgba(0,0,0,0.3);overflow:auto;
-}
-nav{height:55px;position:fixed;top:0;left:0;right:0;max-width:500px;margin:0 auto;background:#6495ed;color:#fff;}
-#bicon{font-size:30px;margin-right:30px;margin-top:10px;float:left;margin-left:20px;text-shadow:0px 1px 1px #000;cursor:pointer;}
-.bott{height:100px;position:fixed;bottom:0;left:0;right:0;max-width:490px;margin:0 auto;background:#fff;}
-#mssg{
-	padding:10px;font-family:arial;width:75%;height:80px;resize:none;outline:none;font-size:17px;float:left;border:0px;
-}
-.btn{background:#4682b4;color:#fff;outline:none;border:0px;padding:10px;border-radius:3px;text-shadow:0px 1px 1px #000;cursor:pointer;}
-.wrap{top:0;left:0;width:100%;position:fixed;z-index:9;background:rgba(0,0,0,0.6);height:100%;font-family:sitka text;display:none;}
-.wrapper{top:0;left:0;width:100%;position:fixed;z-index:19;background:rgba(0,0,0,0.6);height:100%;font-family:sitka text;display:none;}
-.prog{line-height:50px;background:#fff;border-radius:5px;top:15%;left:5%;right:5%;position:fixed;margin:0 auto;max-width:300px;}
-.card{padding:10px;font-size:16px;color:#191970;font-family:sitka text;clear:both;margin:10px 0px;border-radius:4px;max-width:80%;box-shadow:0px 1px 3px grey}
-.caption{
-	width:94%;max-width:350px;margin:0 auto;position:fixed;left:1%;right:1%;top:5%;background:#fff;min-height:200px;border-radius:5px;z-index:20;
-	display:none;overflow:auto;
-}
-#pbc{height:22px;width:100%;border-radius:10px;background:#F5F5DC;display:none;box-shadow:inset 0px 0px 4px grey;max-width:300px;}
-#progress{max-width:100%;width:0%;background:green;height:100%;border-radius:10px;color:#fff;font-family:helvetica;text-align:center;}
-#text{font-size:13px;line-height:22px;}
-</style>
+<link rel="stylesheet" href="<?= sf_asset("css/design.css", "") ?>"><link rel="stylesheet" href="<?= sf_asset("css/workspace.css", "") ?>"><script src="<?= sf_asset("js/chat-ui.js", "") ?>" defer></script></head><body class="chat-page">
 <div class="wrap"><div class="prog">Posting...</div></div> <div class="wrapper"></div>
 
-<div class="caption">
+<div class="caption" role="dialog" aria-modal="true" aria-labelledby="caption-title">
 	<input type="hidden" value="" id="temp">
 	<div style="padding:10px" class="prelod">
 	<center><img id="prvimg"style="max-height:200px;max-width:100%"></center>
-	<h3 style='text-align:center;color:#191970'>Add Message to the Image</h3>
+	<h3 id="caption-title">Share a photo</h3>
 	<form method="post" id="picfom" enctype="multipart/form-data">
-	<input type="hidden"name="cto"value="<?php echo $uid;?>"id="cto">
-	<input type="hidden"name="cfro"value="<?php echo $rid;?>"id="cfro">
-	<input type="file"accept="image/*"id="pic"name="photo"style="display:none;" onchange="loadcaption()">
-	<p><textarea name="dtxt" id="mssg" onkeyup="resizeim('s')" onblur="resizeim('h')" style="width:100%;height:100px;margin:10px 0px"
-	placeholder="Type Message"autofocus></textarea></p>
+	<input type="hidden"name="cto"value="<?php echo $uid;?>"id="photo-cto">
+	<input type="hidden"name="cfro"value="<?php echo $rid;?>"id="photo-cfro">
+	<input type="file"accept="image/*"id="pic"name="photo"style="display:none;" onchange="loadcaption(event)">
+	<p><textarea name="dtxt" id="photo-caption" onkeyup="resizeim('s')" onblur="resizeim('h')" style="width:100%;height:100px;margin:10px 0px"
+	aria-label="Message" placeholder="Add a caption…"></textarea></p>
 	<p style='text-align:right;'><button class="btn"style="background:brown;margin-right:20px"onclick="cancelupd(event)">Cancel</button>
 	<button class="btn" onclick="savepic(event)">Send</button></p><br>
 	</form>
@@ -68,7 +46,7 @@ nav{height:55px;position:fixed;top:0;left:0;right:0;max-width:500px;margin:0 aut
 	</div>
 </div>
 
-<nav>
+<nav><a class="chat-back" href="login.php" onclick="if (history.length > 1) { history.back(); return false; }" aria-label="Back to workspace">←</a>
 <h3 style="line-height:50px;font-size:22px;padding:0px 20px;font-family:sitka text;text-shadow:0px 1px 1px #000;"><?php echo $name;?></h3>
 </nav>
 <div class="main">
@@ -76,6 +54,7 @@ nav{height:55px;position:fixed;top:0;left:0;right:0;max-width:500px;margin:0 aut
 <div style="padding:20px;overflow:auto">
 <?php
 	$qry=mysqli_query($con,"SELECT *FROM `chats` WHERE (`sender`='$uid' AND `receiver`='$rid') OR (`sender`='$rid' AND `receiver`='$uid')");
+	if (mysqli_num_rows($qry) === 0) { echo '<div class="chat-empty"><span aria-hidden="true">↔</span><h2>Start a conversation.</h2><p>Share a question, an update, or a photo from the farm.</p></div>'; }
 	while($row=mysqli_fetch_assoc($qry)){
 		$mssg=nl2br(prepare(ucfirst($row['message']))); $tm=$row['time']; $day=date("M d, h:i a",$tm); 
 		$sen=$row['sender']; $typ=$row['type'];
@@ -106,7 +85,7 @@ nav{height:55px;position:fixed;top:0;left:0;right:0;max-width:500px;margin:0 aut
 	}
 	
 	$sql=mysqli_query($con,"SELECT *FROM `chats` ORDER BY `time` DESC LIMIT 1");
-	$maxtm=mysqli_fetch_array($sql)['time']; echo "<input type='hidden' id='maxtm' value='$maxtm'>";
+	$latest=mysqli_fetch_array($sql); $maxtm=$latest ? $latest['time'] : 0; echo "<input type='hidden' id='maxtm' value='$maxtm'>";
 ?>
 <div style="height:40px;float:right;width:100%"></div></div>
 </div></div>
@@ -115,13 +94,13 @@ nav{height:55px;position:fixed;top:0;left:0;right:0;max-width:500px;margin:0 aut
 <form method="post"id="cform"onsubmit="sendmssg(event)">
 <input type="hidden"name="cto"value="<?php echo $uid;?>"id="cto">
 <input type="hidden"name="cfro"value="<?php echo $rid;?>"id="cfro">
-<textarea name="chat" id="mssg" placeholder="Type Message"onkeyup="scrolbottom()" autofocus required></textarea>
+<textarea name="chat" id="mssg" aria-label="Message" placeholder="Write a message…"onkeyup="scrolbottom()" autofocus required></textarea>
 <p style="text-align:right;margin-bottom:10px">
-<label for="pic"><i class="fa fa-camera"style="font-size:28px;color:#008080;cursor:pointer"title="Select Photo"></i></label></p>
+<label for="pic" tabindex="0" role="button" aria-label="Attach a photo"><i class="fa fa-camera"style="font-size:28px;color:#008080;cursor:pointer"title="Select Photo"></i></label></p>
 <p><button class="btn"style="float:right"><i class="fa fa-arrow-right"></i> Send</button></p>
 </form>
 </div></div>
-</html>
+
 
 <script>
 
@@ -176,7 +155,7 @@ function closeprog(){
 	$(".wrapper").fadeOut(); $(".caption").fadeOut(); _("picfom").reset();
 }
 
-function loadcaption(){
+function loadcaption(event){
 	var img=_("pic").files[0]; $(".prelod").show(); $(".postlod").hide();
 	if(img!=null){
 		var type=img.type;
@@ -281,6 +260,7 @@ function loadmssg(){
 	$("#activity").load("chatsaver.php?showchats=<?php echo "$uid:$rid";?>"); setTimeout(scrolbottom,500); 
 }
 </script>
+</body></html>
 
 <?php
 }
